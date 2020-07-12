@@ -87,8 +87,10 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     start = problem.getStartState()
+    visited = set()
+    visited.add(start)
     for neighbor in problem.getSuccessors(start):
-        path = depthFirstSearch_helper(problem,neighbor,set(start),[])
+        path = depthFirstSearch_helper(problem,neighbor,visited,[])
         if path:
             return path
     return []
@@ -100,9 +102,10 @@ def depthFirstSearch_helper(problem,start,visited,path):
         return path
     for neighbor in problem.getSuccessors(start[0]):
         if neighbor[0] not in visited:
-            path = depthFirstSearch_helper(problem,neighbor,visited,path)
-            if path:
-                return path
+            result = depthFirstSearch_helper(problem,neighbor,visited,path)
+            if result:
+                return result
+            path.pop()
     return []
     
 def breadthFirstSearch(problem):
