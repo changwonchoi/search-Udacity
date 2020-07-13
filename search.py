@@ -114,18 +114,20 @@ def breadthFirstSearch(problem):
     start = problem.getStartState()
     visited = set()
     visited.add(start)
-    frontier = util.queue()
-    path = list()
+    frontier = util.Queue()
+    path = dict()
     for neighbor in problem.getSuccessors(start):
     	frontier.push(neighbor)
+    	path[neighbor[0]] = [neighbor[1]]
     while not frontier.isEmpty():
     	current = frontier.pop()
     	if problem.isGoalState(current[0]):
-    		return path
+    		return path[current[0]]
     	visited.add(current[0])
     	for child in problem.getSuccessors(current[0]):
     		if child[0] not in visited:
     			frontier.push(child)
+    			path[child[0]] = path[current[0]] + [child[1]]
     return []
 
 
