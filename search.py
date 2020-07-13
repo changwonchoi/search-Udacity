@@ -110,8 +110,24 @@ def depthFirstSearch_helper(problem,start,visited,path):
     
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #Need to implement path
+    start = problem.getStartState()
+    visited = set()
+    visited.add(start)
+    frontier = util.queue()
+    path = list()
+    for neighbor in problem.getSuccessors(start):
+    	frontier.push(neighbor)
+    while not frontier.isEmpty():
+    	current = frontier.pop()
+    	if problem.isGoalState(current[0]):
+    		return path
+    	visited.add(current[0])
+    	for child in problem.getSuccessors(current[0]):
+    		if child[0] not in visited:
+    			frontier.push(child)
+    return []
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
