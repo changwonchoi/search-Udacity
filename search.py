@@ -87,6 +87,8 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     start = problem.getStartState()
+    if problem.isGoalState(start):
+    	return []
     visited = set()
     visited.add(start)
     for neighbor in problem.getSuccessors(start):
@@ -112,21 +114,24 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     #Need to implement path
     start = problem.getStartState()
+    if problem.isGoalState(start):
+    	return []
     visited = set()
     visited.add(start)
     frontier = util.Queue()
     path = dict()
     for neighbor in problem.getSuccessors(start):
     	frontier.push(neighbor)
+    	visited.add(neighbor[0])
     	path[neighbor[0]] = [neighbor[1]]
     while not frontier.isEmpty():
     	current = frontier.pop()
     	if problem.isGoalState(current[0]):
     		return path[current[0]]
-    	visited.add(current[0])
     	for child in problem.getSuccessors(current[0]):
     		if child[0] not in visited:
     			frontier.push(child)
+    			visited.add(child[0])
     			path[child[0]] = path[current[0]] + [child[1]]
     return []
 
