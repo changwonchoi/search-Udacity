@@ -141,24 +141,27 @@ def uniformCostSearch(problem):
     start = problem.getStartState()
     if problem.isGoalState(start):
     	return []
+    cost = {start:0}
+    frontier = util.PriorityQueue()
+    frontier.update(start,cost[start])
+    path = dict()
+    path[start] = []
     visited = set()
     visited.add(start)
-    cost = 0
-    frontier = util.PriorityQueue()
-    path = dict()
-    for neighbor in problem.getSuccessors(start):
-    	frontier.push(neighbor, neighbor[2])
-    	visited.add(neighbor[0])
-    	path[neighbor[0]] = [neighbor[1]]
     while not frontier.isEmpty():
     	current = frontier.pop()
-    	if problem.isGoalState(current[0]):
-    		return path[current[0]]
-    	for child in problem.getSuccessors(current[0]):
+    	if problem.isGoalState(current):
+    		return path[current]
+    	for child in problem.getSuccessors(current):
     		if child[0] not in visited:
-    			frontier.push(child,child[2])
+    			cost[child[0]] = cost[current] + child[2]
+    			frontier.update(child[0],cost[child[0]])
     			visited.add(child[0])
-    			path[child[0]] = path[current[0]] + [child[1]]
+    			path[child[0]] = path[current] + [child[1]]
+    		elif cost[current] + child[2] < cost[child[0]]:
+    			cost[child[0]] = cost[current] + child[2]
+    			frontier.update(child[0],cost[child[0]])
+    			path[child[0]] = path[current] + [child[1]]
     return []
 
 def nullHeuristic(state, problem=None):
