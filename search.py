@@ -189,12 +189,15 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     		return path[current]
     	for child in problem.getSuccessors(current):
     		if child[0] not in visited:
-    			cost[child[0]] = cost[current] + child[2] + heuristic(start,problem)
+    			cost[child[0]] = (cost[current] + child[2] + heuristic(child[0],problem)
+    							 - heuristic(current,problem))
     			frontier.update(child[0],cost[child[0]])
     			visited.add(child[0])
     			path[child[0]] = path[current] + [child[1]]
-    		elif cost[current] + child[2] + heuristic(start,problem) < cost[child[0]]:
-    			cost[child[0]] = cost[current] + child[2] + heuristic(start,problem)
+    		elif (cost[current] + child[2] + heuristic(child[0],problem)
+    			 - heuristic(current,problem)) < cost[child[0]]:
+    			cost[child[0]] = (cost[current] + child[2] + heuristic(child[0],problem)
+    							 - heuristic(current,problem))
     			frontier.update(child[0],cost[child[0]])
     			path[child[0]] = path[current] + [child[1]]
     return []
