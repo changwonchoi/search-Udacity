@@ -294,14 +294,18 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        return self.startingPosition
+        return self.startingPosition, self.corners
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        return state in self.corners
-        
+        position, corners = state
+        if position in corners and len(corners) == 1:
+            return True
+        else:
+            return False
+
     def getSuccessors(self, state):
         """
         Returns successor states, the actions they require, and a cost of 1.
@@ -315,14 +319,20 @@ class CornersProblem(search.SearchProblem):
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            "*** YOUR CODE HERE ***"
+            position, corners = state
+            x,y = position
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if not hitsWall:
+                if position not in corners:
+                    successors.append((((nextx, nexty),corners), action, 1))
+                else:
+                    newCorners = []
+                    for pos in corners:
+                        if pos != position:
+                            newCorners.append(pos)
+                    successors.append((((nextx, nexty), tuple(newCorners)), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
