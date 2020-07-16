@@ -285,9 +285,6 @@ class CornersProblem(search.SearchProblem):
             if not startingGameState.hasFood(*corner):
                 print('Warning: no food in corner ' + str(corner))
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
-        # Please add any code here which you would like to use
-        # in initializing the problem
-        "*** YOUR CODE HERE ***"
 
     def getStartState(self):
         """
@@ -364,11 +361,16 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    position, corners = state
+    x, y = position
+    path = []
+    for corner in corners:
+        xCorner, yCorner = corner
+        manhattan = abs(x - xCorner) + abs(y - yCorner)
+        path.append(manhattan)
+    if problem.isGoalState(state):
+        return 0
+    return max(path)
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
