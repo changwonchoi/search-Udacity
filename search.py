@@ -114,27 +114,19 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     #Need to implement path
     start = problem.getStartState()
-    if problem.isGoalState(start):
-    	return []
-    visited = set()
-    visited.add(start)
     frontier = util.Queue()
-    path = dict()
-    for neighbor in problem.getSuccessors(start):
-    	frontier.push(neighbor)
-    	visited.add(neighbor[0])
-    	path[neighbor[0]] = [neighbor[1]]
+    frontier.push((start,[]))
+    visited = []
     while not frontier.isEmpty():
-    	current = frontier.pop()
-    	if problem.isGoalState(current[0]):
-    		return path[current[0]]
-    	for child in problem.getSuccessors(current[0]):
-    		if child[0] not in visited:
-    			frontier.push(child)
-    			visited.add(child[0])
-    			path[child[0]] = path[current[0]] + [child[1]]
+    	node,direction = frontier.pop()
+    	if problem.isGoalState(node):
+    		return direction
+    	for successor, action, stepcost in problem.getSuccessors(node):
+    		if not successor in visited:
+    			frontier.push((successor, direction + [action]))
+    			visited.append(successor)
+    	visited.append(node)
     return []
-
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -174,35 +166,20 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     start = problem.getStartState()
-    if problem.isGoalState(start):
-    	return []
-    cost = {start:0+heuristic(start,problem)}
     frontier = util.PriorityQueue()
-    frontier.update(start,cost[start])
-    path = dict()
-    path[start] = []
-    visited = set()
-    visited.add(start)
+    frontier.push((start, [], 0), (heuristic(start, problem)))
+    visited = dict()
     while not frontier.isEmpty():
     	current = frontier.pop()
-    	if problem.isGoalState(current):
-    		return path[current]
-    	for child in problem.getSuccessors(current):
-    		if child[0] not in visited:
-    			cost[child[0]] = (cost[current] + child[2] + heuristic(child[0],problem)
-    							 - heuristic(current,problem))
-    			frontier.update(child[0],cost[child[0]])
-    			visited.add(child[0])
-    			path[child[0]] = path[current] + [child[1]]
-    		elif (cost[current] + child[2] + heuristic(child[0],problem)
-    			 - heuristic(current,problem)) < cost[child[0]]:
-    			cost[child[0]] = (cost[current] + child[2] + heuristic(child[0],problem)
-    							 - heuristic(current,problem))
-    			frontier.update(child[0],cost[child[0]])
-    			path[child[0]] = path[current] + [child[1]]
+    	node, direction, cost = current
+    	visited[node] = cost
+    	if problem.isGoalState(node):
+    		return direction
+    	for successor, action, stepcost in problem.getSuccessors(node):
+    		if (successor not in visited) or (successor in visited and visited[successor] > cost + stepcost):
+    			visited[successor] = cost + stepcost
+    			frontier.push((successor, direction + [action], cost + stepcost), cost + stepcost + (heuristic(successor, problem)))
     return []
-    util.raiseNotDefined()
-
 
 # Abbreviations
 bfs = breadthFirstSearch

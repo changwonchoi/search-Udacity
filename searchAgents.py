@@ -201,7 +201,6 @@ class PositionSearchProblem(search.SearchProblem):
                 nextState = (nextx, nexty)
                 cost = self.costFn(nextState)
                 successors.append( ( nextState, action, cost) )
-
         # Bookkeeping for display purposes
         self._expanded += 1 # DO NOT CHANGE
         if state not in self._visited:
