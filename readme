@@ -1,3 +1,6 @@
+## Different search algorithms are tried on a game of Pacman as part of courses on Udacity's AI nanodegree program
+### Search algorithms include DFS, BFS, Greedy, A*, and custom heuristic functions
+
 In this project, your Pacman agent will find paths through his maze world, both to reach a particular location and to collect food efficiently. You will build general search algorithms and apply them to Pacman scenarios.
 
 You only need to modify search.py and searchAgents.py, and you only need to run autograder.py to complete the exercise. Full instructions are avialable here: http://ai.berkeley.edu/search.html
